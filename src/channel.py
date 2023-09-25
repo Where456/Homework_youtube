@@ -4,6 +4,8 @@ import os
 from googleapiclient.discovery import build
 
 api_key: str = os.getenv('YT_API_KEY')
+
+
 class Channel:
 
     def __init__(self, channel_id: str) -> None:
@@ -16,6 +18,30 @@ class Channel:
         self.view_count = 0
 
         self.fetch_channel_data()
+
+    def __str__(self):
+        return f"({self.title}) ({self.url})"
+
+    def __add__(self, other):
+        return self.subscriber_count + other.subscriber_count
+
+    def __sub__(self, other):
+        return self.view_count - other.view_count
+
+    def __lt__(self, other):
+        return self.subscriber_count < other.subscriber_count
+
+    def __le__(self, other):
+        return self.subscriber_count <= other.subscriber_count
+
+    def __gt__(self, other):
+        return self.subscriber_count > other.subscriber_count
+
+    def __ge__(self, other):
+        return self.subscriber_count >= other.subscriber_count
+
+    def __eq__(self, other):
+        return self.channel_id == other.channel_id
 
     def print_info(self) -> str:
         api_key = 'AIzaSyDpDq-CsLp0jkDsSN_sO-hJLFrG8tag9Mw'
@@ -60,4 +86,3 @@ class Channel:
 
         with open(filename, 'w') as file:
             json.dump(data, file, indent=2)
-
