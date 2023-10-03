@@ -1,26 +1,36 @@
-from src.channel import Channel
+from googleapiclient.discovery import build
 
 
 class Video:
-    def __init__(self, channel_id: str) -> None:
-        self.channel_id = channel_id
-        self.title = 'GIL в Python: зачем он нужен и как с этим жить'
-        self.url = f"https://www.youtube.com/watch?v={channel_id}"
-        self.views = 100000
-        self.likes = 5000
+    def __init__(self, video_id: str) -> None:
+        self.video_id = video_id
+        self.title = ""
+        self.url = ""
+        self.views = 0
+        self.likes = 0
+
+        self.fetch_video_data()
+
+    def fetch_video_data(self) -> None:
+        api_key = 'AIzaSyDpDq-CsLp0jkDsSN_sO-hJLFrG8tag9Mw'
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        video_info = youtube.videos().list(
+            part='snippet,statistics',
+            id=self.video_id
+        ).execute()
+
+        if 'items' in video_info:
+            video_info = video_info['items'][0]
+            self.title = video_info['snippet']['title']
+            self.url = f'https://www.youtube.com/watch?v={self.video_id}'
+            self.views = int(video_info['statistics']['viewCount'])
+            self.likes = int(video_info['statistics']['likeCount'])
 
     def __str__(self) -> str:
         return self.title
 
 
-class PLVideo:
-    def __init__(self, channel_id: str, playlist_id: str) -> None:
-        self.channel_id = channel_id
+class PLVideo(Video):
+    def __init__(self, video_id: str, playlist_id: str) -> None:
+        super().__init__(video_id)
         self.playlist_id = playlist_id
-        self.title = "MoscowPython Meetup 78 - вступление"
-        self.url = f"https://www.youtube.com/watch?v={channel_id}"
-        self.view_count = 50000
-        self.like_count = 2000
-
-    def __str__(self) -> str:
-        return self.title

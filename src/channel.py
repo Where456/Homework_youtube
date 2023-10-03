@@ -55,9 +55,6 @@ class Channel:
         return build('youtube', 'v3', developerKey=api_key)
 
     def fetch_channel_data(self) -> None:
-        """
-        Получает данные о канале с использованием YouTube API и заполняет соответствующие атрибуты экземпляра.
-        """
         youtube = self.get_service()
         channel_info = youtube.channels().list(
             part='snippet,statistics',
