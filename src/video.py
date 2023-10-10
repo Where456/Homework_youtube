@@ -4,10 +4,10 @@ from googleapiclient.discovery import build
 class Video:
     def __init__(self, video_id: str) -> None:
         self.video_id = video_id
-        self.title = None
-        self.url = None
-        self.views = None
-        self.likes = None
+        self.title = ''
+        self.url = ''
+        self.views = 0
+        self.likes = 0
 
         self.fetch_video_data()
 
@@ -26,7 +26,11 @@ class Video:
                 self.url = f'https://www.youtube.com/watch?v={self.video_id}'
                 self.views = int(video_info['statistics']['viewCount'])
                 self.likes = int(video_info['statistics']['likeCount'])
-        except Exception:
+        except IndexError:
+            self.title = None
+            self.url = None
+            self.views = None
+            self.likes = None
             print('Передан несуществующий id видео')
 
     def __str__(self) -> str:
